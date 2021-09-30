@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CART</title>
+    <!-- CSS only -->
+        <link href="../static/CSS/home.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function(){
+            $(".qnty").change(function(){
+                totalprice(this);
+            });
+            $(".qnty").blur(function(){
+                totalprice(this);
+            });
+            finalprice();
+        });
+        function totalprice(control){
+            console.log("hello");
+            var price = parseFloat($(control).parent().prev().html());
+            $(control).parent().next().find('.foodprice').val(price * parseFloat($(control).val()))
+            var id = Number($(control).next().val());
+            var price = Number($(control).parent().next().find('.foodprice').val());
+            update(control, id, price);
+            finalprice();
+        }
+        function finalprice(){
+            var totalamt = 0;
+            $('.foodprice').each(function(){
+                totalamt += parseFloat($(this).val());
+            });
+            $('#total').val(totalamt)
+        }
+        function update(ctrl, id, price){
+            if ($(ctrl).val() === undefined){
+                $(ctrl).val('0');
+                return;
+            }
+            let quantity = Number($(ctrl).val());
+            $.ajax({
+                url: '/updatequantity/',
+                method: 'POST',
+                async: true,
+                cache: false,
+                data: {'q': quantity, 'csrfmiddlewaretoken': '{{ csrf_token }}', 'id': id, 'p': price},
+                success: function(data){
+
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" id="brand" href="/home/">FoodPlaza</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="links" aria-current="page" href="/home/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/menu/">Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/aboutus/">Contact</a>
+                  </li>
+                    {% if request.session.userid or request.session.adminid %}
+                    <li class="nav-item">
+                    <a class="nav-link" id="links" href="/logout/">Logout</a>
+                  </li>
+                    {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/login/">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/register/">Register</a>
+                  </li>
+                    {% endif %}
+                  <li class="nav-item dropdown">
+                      {% if request.session.userid or request.session.adminid %}
+                    <a class="nav-link dropdown-toggle" id="links" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                      {% endif %}
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        {% if request.session.userid %}
+                        <li><a class="dropdown-item dditems" href="/showcart/">My Cart</a></li>
+                        <li><a class="dropdown-item dditems" href="/myorder/">My Orders</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                        {% if request.session.adminid %}
+                          <li><a class="dropdown-item dditems" href="/allcustomers/">Show Customers</a></li>
+                        <li><a class="dropdown-item dditems" href="/addfood/">Add Food</a></li>
+                        <!--<li><a class="dropdown-item" href="addcustomer/">Add Customers</a></li>-->
+                        <li><a class="dropdown-item dditems" href="/graph/">Graphical Information</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        <br><br>
+<form method="post" action="/order/">
+{% csrf_token %}
+<br><br>
+    <table class="table table-condensed" cellpadding="5px">
+        <tr>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+        {% for cart in mycart %}
+        <tr>
+            <td>{{cart.foodname}}</td>
+            <td>{{cart.foodprice}}</td>
+            <td>
+                <input type="number" min="1" name="foodqnt" class="qnty" value="{{cart.foodqnty}}">
+                <input type="hidden" id="{{cart.cartid}}" name="foodid" value="{{cart.fid}}">
+                <input type="hidden" class="cartid" name="cartid" id="{{cart.cartid}}" value="{{cart.cartid}}">
+            </td>
+            <td>
+                <input name="totalperprice" type="text" class="foodprice" value="{{cart.total}}" readonly>
+            </td>
+            <td>
+                <a href="/deletecart/{{cart.cartid}}">delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <label>Total Amount: </label>
+    <input type="text" id="total" name="Totalbill" readonly>
+    <input type="submit" value="Place Order">
+</form>
+
+</body>
+</html>

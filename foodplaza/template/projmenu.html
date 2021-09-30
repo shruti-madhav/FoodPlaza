@@ -1,0 +1,779 @@
+{% load static %}
+<!--% url 'payment' as payment %-->
+<html>
+    <head>
+        <title>FOODPLAZA</title>
+        <!-- CSS only -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static '/CSS/menu.css' %}">
+        <link rel="stylesheet" href="../static/CSS/menu.css">
+    <!--fonts-->
+        <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway&family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:ital@1&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Sansita+Swashed:wght@500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Charm:wght@700&family=Chonburi&family=Courgette&family=Damion&family=Lemon&family=Niconne&family=Satisfy&family=Short+Stack&display=swap" rel="stylesheet">
+        
+        <script src="https://kit.fontawesome.com/55af86b1db.js" crossorigin="anonymous"></script>
+<!-- JS, Popper.js, and jQuery -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+        <script>
+        $(document).ready(function(){
+           $('.addcart').click(function(){
+               $.ajax({
+                    url: '/addtocart',
+                    method: 'GET',
+                    async: true,
+                    cache: false,
+                    data: {'foodid': $(this).attr('id')},
+                    success:
+                    function(response){
+                        if(response.done === 'true'){
+                            console.log("hello")
+                            $('#messagebox').html('added to cart');
+                            $('#messagebox').removeClass('error');
+                            $('#messagebox').addClass('success');
+                            $('#messagebox').show();
+                            setTimeout(hideBox, 1000);
+                        }
+                    },
+                    error:
+                    function(a,b,c){
+                        $('#messagebox').html('some error occured');
+                        $('#messagebox').removeClass('success');
+                        $('#messagebox').addClass('error');
+                        $('#messagebox').show();
+                        setTimeout(hideBox, 1000);
+                    }
+               });
+               function hideBox(){
+                    $('#messagebox').html("added")
+                }
+           });
+        });
+    </script>
+    </head>
+    <body><nav class="navbar navbar-expand-md fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" id="brand" href="/home/">FoodPlaza</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="links" aria-current="page" href="/home/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/menu/">Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="#">Contact</a>
+                  </li>
+                    {% if request.session.userid or request.session.adminid %}
+                    <li class="nav-item">
+                    <a class="nav-link" id="links" href="/logout/">Logout</a>
+                  </li>
+                    {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/login/">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/register/">Register</a>
+                  </li>
+                    {% endif %}
+                  <li class="nav-item dropdown">
+                      {% if request.session.userid or request.session.adminid %}
+                    <a class="nav-link dropdown-toggle" id="links" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                      {% endif %}
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        {% if request.session.userid %}
+                        <li><a class="dropdown-item dditems" href="/showcart/">My Cart</a></li>
+                        <li><a class="dropdown-item dditems" href="/myorder/">My Orders</a></li>
+                        <li><a class="dropdown-item dditems" href="changepassword/">Change Password</a></li>
+                        {% endif %}
+                        {% if request.session.adminid %}
+                        <li><a class="dropdown-item dditems" href="addfood/">Add Food</a></li>
+                        <!--<li><a class="dropdown-item" href="addcustomer/">Add Customers</a></li>-->
+                        <li><a class="dropdown-item dditems" href="/graph/">Graphical Information</a></li>
+                        <li><a class="dropdown-item dditems" href="changepassword/">Change Password</a></li>
+                        {% endif %}
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+        
+        <div>
+            <img src="../static/IMG/homebg2.jpg">
+            <div class="align-self-center" id="m">
+                <p class="text-center" id="mn">MENU</p>
+            </div></div>
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true" href="#Appetizer">Appetizer</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" role="tab" aria-controls="profile" aria-selected="false" href="#MainCourse">Main Course</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" role="tab" aria-controls="contact" aria-selected="false" href="#Dessert">Dessert</a>
+            </li>
+        </ul>
+        {% for i in menu %}
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="Appetizer" role="tabpanel" aria-labelledby="home-tab">       
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">{{i.foodname}}</h3>
+                                <div class="mb-1 text-muted">M.R.P {{i.foodprice}}</div>
+                                    <h5 class="card-text mb-auto">Extra Crisp. Happy. Baked. Big Textured. Syrupy. Delicious. Appetizing. Nice.</h5>
+                                    <span class="addcart"><button class="btn btn-info" id="waffles">Add To Cart</button></span>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:40rem;height:20rem;">
+                                <img src="{{i.foodimg.url}}" style="width:40rem;height:20rem;">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <!--<div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Spring Rolls</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Veg%20Spring%20Rolls.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">French Fries</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/frenchfries.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-danger">non veg</strong>
+                                <h3 class="mb-0">Chicken Momos</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width=32rem;">
+                                <img src="../static/IMG/chickenmomo.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Samosa</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Samosa.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Pancakes</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Pancakes.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Garlic Bread</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/garlicbread.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Paneer Tikka</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Paneer%20Tikka2.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Dahi Vada</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/dahivada.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Mac N Cheese</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-info">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width: 32rem;">
+                                <img src="../static/IMG/macncheese.jpg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="select"></div>
+                
+                <div class="tab-pane fade" id="MainCourse" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-danger">Non veg</strong>
+                                <h3 class="mb-0">Chicken Biryani</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Extra Crisp. Happy. Baked. Big Textured. Syrupy. Delicious. Appetizing. Nice.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/chicken%20biryani.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Palak Paneer</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/palakpaneer.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Lasagna</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Lasagna.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Malai Kofta</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width=32rem;">
+                                <img src="../static/IMG/malaikofta.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-danger">Non veg</strong>
+                                <h3 class="mb-0">Butter Chicken</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/butterchicken.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Naan</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/naan.JPG">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Shahi Paneer</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/shahipaneer.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Matar Pulao</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/MatarPulao2.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Paneer Bhurji</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/paneerbhurji2.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-danger">Non veg</strong>
+                                <h3 class="mb-0">Tandori Chicken</h3>
+                                <div class="mb-1 text-muted">M.R.P 99</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width: 32rem;">
+                                <img src="../static/IMG/TandooriChicken.jpg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="Dessert" role="tabpanel" aria-labelledby="contact-tab">
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Chocolate Mousse</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Extra Crisp. Happy. Baked. Big Textured. Syrupy. Delicious. Appetizing. Nice.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/chocolate%20mousse.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Donut</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Donut.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Ice Cream</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/icecream.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Matka Kulfi</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width=32rem;">
+                                <img src="../static/IMG/matkakulfi.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Chocolate Fudge</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/chocolatefudge.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Chocolate Truffle</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/chocotruffles.jpeg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Blueberry Pie</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/BlueberryPie.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Cheese Cake</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/Cheesecake2.jpg">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Choco Lava Cake</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width:32rem;">
+                                <img src="../static/IMG/lavacake.jpg">                          
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <strong class="d-inline-block mb-2 text-success">veg</strong>
+                                <h3 class="mb-0">Fruit Custard</h3>
+                                <div class="mb-1 text-muted">M.R.P 59</div>
+                                    <h5 class="card-text mb-auto">Filled with a shredded mixture of vegetables served deep fried.</h5>
+                                    <button class="btn btn-pimary">Add To Cart</button>
+                            </div>
+                            <div class="card col-auto d-none d-lg-block" style="width: 32rem;">
+                                <img src="../static/IMG/FruitCustard.jpg">
+                            </div>
+                        </div>-->
+                </div>
+            </div>
+
+        <footer>
+            <div class="row h-50">
+                <div class="col-md-12 align-self-center">
+                    <h4 class="text-center"><a class="homefoot" href="home.html">Home|</a><a class="homefoot" href="menu.html">Categories|</a><a class="homefoot" href="aboutus.html">About|</a><a class="homefoot" href="login.html">Login</a></h4>
+                </div>
+            </div>
+        </footer>
+        <script>
+            let products=[
+                {
+                    name:'Waffles',
+                    tag:'',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Spring Rolls',
+                    tag:'Veg Spring Rolls',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'French Fries',
+                    tag:'frenchfries',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Chicken Momos',
+                    tag:'chickenmomo',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Samosa',
+                    tag:'Samosa',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Pancakes',
+                    tag:'Pancake',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Garlic Bread',
+                    tag:'',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Paneer Tikka',
+                    tag:'Paneer Tikka2',
+                    price:59,
+                    inCart:0
+                },
+                {
+                    name:'Dahi Vada',
+                    tag:'dahivada',
+                    price:59,
+                    inCart:0
+                }
+            ]
+            let carts = document.querySelectorAll('.btn');
+            console.log(carts.length);
+            for(let i=0 ; i < carts.length; i++){
+                carts[i].addEventListener('click',()=>{
+                    cartnum(products[i]);
+                    total(products[i]);
+                })
+            }
+            //quantity saathi
+            function cartnum(product){
+                let productnum = localStorage.getItem('cartnum');
+                productnum = parseInt(productnum);
+                if(productnum){
+                    localStorage.setItem('cartnum',productnum + 1);
+                    document.querySelector('.tab span').textContent = productnum + 1;
+                }else{
+                    localStorage.setItem('cartnum', 1);
+                    document.querySelector('.tab span').textContent = 1;
+                }
+                setitems(product)
+            }
+            //num of products beside the cart
+            function onloadcartnum(){
+                let productnum = localStorage.getItem('cartnum');
+                if(productnum){
+                    document.querySelector('.tab span').textContent = productnum;
+                }
+            }
+            function setitems(product){
+                let cartitems = localStorage.getItem('productincart');
+                cartitems = JSON.parse(cartitems);
+                console.log("cartitems in setitems",cartitems);
+                if(cartitems != null){
+                    if(cartitems[product.name] == undefined){
+                        cartitems={
+                            ...cartitems,[product.name]:product
+                        }
+                    }
+                    cartitems[product.name].inCart +=1;
+                }else{
+                    product.inCart=1;
+                    cartitems={
+                        [product.name]:product
+                    }
+                }
+                localStorage.setItem("productincart",JSON.stringify(cartitems));
+            }
+
+            //total amount
+            function total(product){
+                let cost = localStorage.getItem('total');
+                if(cost != null){
+                    cost = parseInt(cost);
+                    localStorage.setItem("total", cost+product.price)
+                }else{
+                localStorage.setItem("total", product.price);}
+            }
+            function display(){
+                let cartitems = localStorage.getItem("productincart");
+                cartitems = JSON.parse(cartitems);
+                console.log(cartitems);
+                let container=document.querySelector(".cartbody");
+                let cost = localStorage.getItem('total');
+                if(cartitems && container){
+                    container.innerHTML = ``;
+                    Object.values(cartitems).map(item =>{
+                        container.innerHTML += `
+<div class="Product">
+    <button class="remove" onclick="removebtn();"><i class="fa fa-window-close-o" aria-hidden="true"></i></button>
+    ${item.name}
+</div>
+<div class="Price">${item.price}</div>
+<div class="Quantity">
+    <button class="minus">
+        <i class="fa fa-minus-square-o" aria-hidden="true""></i></button><span>${item.inCart}</span>
+    <button class="plus" onclick="increase()">
+    <i class="fa fa-plus-square-o" aria-hidden="true"></i></button>
+</div>
+<div class="Total">${item.price*item.inCart}</div>
+`;
+                    });
+                    let contain=document.querySelector(".totalcontainer");
+                    contain.innerHTML += `
+<div class="carttotal"><h5 class="totaltitle">Your Total Amount</h5><h5>: ${cost}</h5>
+`;
+                }
+            }
+
+            function increase(){
+                let cartitems = localStorage.getItem("productincart");
+                cartitems = JSON.parse(cartitems);
+                console.log(cartitems);
+                if(cartitems == undefined){console.log("un")}else{
+                    for(var i=0;i<cartitems;i++){
+                        console.log("hello6");
+                        console.log(cartitems[i][0]);
+                    }
+                }
+                //if(cartitems){
+                    //localStorage.setItem('cartnum',productnum + 1);
+            };
+
+
+            function removebtn(){
+                let cartitems = localStorage.getItem("productincart");
+                cartitems = JSON.parse(cartitems);
+                console.log("hello",cartitems.length);
+                if(cartitems.length != undefined){
+                for(var i=0;i<cartitems.length;i++){
+                    console.log("hello6");
+                    //cartitems.remove[i];
+                }}else{console.log("hello im else part");}
+            }
+            /*let removebutton = document.getElementsByClassName('remove');
+            for (let i=0;i< removebutton.length;i++){
+                console.log("hello");
+                removebutton[i].addEventListener('click',()=>{
+                    console.log("hello");
+                    let buttonclicked = event.target;
+                    console.log(buttonclicked);
+                    buttonclicked.parentElement.parentElement.remove();
+                })
+            }
+
+            $('.Quantity').on("click","button.minus",function(){
+               console.log("hello minus") ;
+            });
+            $('.Quantity').on("click","button.plus",function(){
+               console.log("hello plus") ;
+            });*/
+            console.log("hello");
+            display();
+
+            
+            onloadcartnum();
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

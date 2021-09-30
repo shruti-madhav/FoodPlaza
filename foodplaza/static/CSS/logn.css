@@ -1,0 +1,116 @@
+/*navbar*/
+nav{
+    box-shadow: 5px 10px 8px black;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../IMG/loginbg.jpg');
+}
+
+#links, .dditems, #first, #second, .speciallinks, .footerlinks, .logintext, .buttons{
+    font-family: 'Comfortaa', cursive;
+}
+
+#brand{
+    outline: none;
+    color: white;    
+    font-size: 35px;
+    padding-left: 30px;
+    font-family: 'Lobster', cursive;
+}
+
+#links{
+    outline: none;    
+    color: white;
+    font-size: 22px;
+    padding-left: 30px;
+}
+
+.dditems{
+    font-size: 22px;
+}
+/*end navbar*/
+
+.loginimage{
+    width: 100%;
+    height: 850px;
+}
+
+label{
+    color: whitesmoke;
+    font-size: 35px;
+    font-family: 'Lobster', cursive;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 4px 7px 5px black;
+}
+
+.logintext{
+    padding: 5px;
+    color: whitesmoke;
+    font-family: 'Lobster' cursive;
+}
+
+.register-inputs{
+    margin: 10px;
+    padding: 3px;
+    outline: none;
+    border: none;
+    font-size: 25px;
+    color: whitesmoke;
+    background-color: transparent;
+    border-bottom: 2px solid black ;
+}
+
+::placeholder{
+    color: whitesmoke;
+    font-size: 20px;
+    font-family: 'Comfortaa', cursive;
+}
+
+.buttons{
+    font-size: 28px;
+    color:whitesmoke;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 20px;
+    border:1px solid black;
+    background-color: transparent;
+    box-shadow: 5px 8px 6px black;
+}
+
+/*footer*/
+
+.footer{
+    min-height: 200px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: url('../IMG/insta-4.jpg');
+}
+
+.footerlinks{
+    display: flex;
+    margin-left: 140px;
+}
+
+.flinks{
+    font-family: 'Nunito', sans-serif;
+    font-size: 40px;
+    padding-right: 20px;
+    color: black;
+    font-weight: bolder;
+    padding-left: 30px;
+    margin-top: 130px;
+}
+
+.sociallinks{
+    display: flex;
+    margin-left: 390px;
+}
+
+.slinks{
+    font-weight: bold;
+    padding: 15px;
+}
+/* end footer*/

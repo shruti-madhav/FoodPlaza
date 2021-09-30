@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MY ORDERS</title>
+    <!-- CSS only -->
+        <link href="../static/CSS/home.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" id="brand" href="/home/">FoodPlaza</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="links" aria-current="page" href="/home/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/menu/">Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/aboutus/">Contact</a>
+                  </li>
+                    {% if request.session.userid or request.session.adminid %}
+                    <li class="nav-item">
+                    <a class="nav-link" id="links" href="/logout/">Logout</a>
+                  </li>
+                    {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/login/">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/register/">Register</a>
+                  </li>
+                    {% endif %}
+                  <li class="nav-item dropdown">
+                      {% if request.session.userid or request.session.adminid %}
+                    <a class="nav-link dropdown-toggle" id="links" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                      {% endif %}
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        {% if request.session.userid %}
+                        <li><a class="dropdown-item dditems" href="/showcart/">My Cart</a></li>
+                        <li><a class="dropdown-item dditems" href="/myorder/">My Orders</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                        {% if request.session.adminid %}
+                          <li><a class="dropdown-item dditems" href="/allcustomers/">Show Customers</a></li>
+                        <li><a class="dropdown-item dditems" href="/addfood/">Add Food</a></li>
+                        <!--<li><a class="dropdown-item" href="addcustomer/">Add Customers</a></li>-->
+                        <li><a class="dropdown-item dditems" href="/graph/">Graphical Information</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+<br><br><br>
+<center>
+<table style="border:2px solid purple;padding:10px"><tr>
+    <th>OrderId</th>
+    <th>Your Email</th>
+    <th>Total Amount</th>
+    <th>Date</th>
+</tr>
+    {% for i in orders %}
+    <tr style="padding:10px">
+        <td>{{i.orderid}}</td>
+        <td>{{i.custemail}}</td>
+        <td>{{i.totalbill}}</td>
+        <td>{{i.date}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</center>
+</body>
+</html>

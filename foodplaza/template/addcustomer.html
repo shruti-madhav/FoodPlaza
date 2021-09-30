@@ -1,0 +1,100 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="{% static 'JS/jquery.validate.min.js' %}"></script>
+    <style>
+        .textbox.error{
+            border : 1px solid red;
+            i cant
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $("form").validate({
+                rules:{
+                    custname: {required: true, maxlength: 10, minlength: 5},
+                    custemail: {required: true, email: true},
+                    custpass: {required: true, minlength: 6},
+                    cnfmpass: {required: true, minlength: 6, equalTo: "#pass"},
+                    custcont: {required: true, minlength: 10, maxlength: 10},
+                    custaddress: {required: true},
+                }
+            });
+            $(".custemail").change(function(){
+                var cust_email = $(this).val();
+                $.ajax({
+                    url : '/validate_user',
+                    data : {'custemail' : cust_email},
+                    success : function(data){
+                        if(data.is_taken=="true"){
+                            alert("entered user is already present")
+                            $(this).addClass('error')
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <center>
+            <form method="post" action="/addcustomer/">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>
+                            <label>Customer Name </label>
+                        </td>
+                        <td>
+                            <input type="text" name="custname" class="textbox">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Customer Email </label>
+                        </td>
+                        <td>
+                            <input type="email" class="custemail textbox" name="custemail">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Customer Password </label>
+                        </td>
+                        <td>
+                            <input type="password" name="custpass" id="pass" class="textbox">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Customer Confirm Password </label>
+                        </td>
+                        <td>
+                            <input type="password" name="cnfmpass" class="textbox">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Customer contact </label>
+                        </td>
+                        <td>
+                            <input type="text" name="custcont" class="textbox">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Customer Address </label>
+                        </td>
+                        <td>
+                            <input type="text" name="custaddress" class="textbox">
+                        </td>
+                    </tr>
+                </table>
+                <input type="submit" value="submit">
+            </form>
+    </center>
+</body>
+</html>

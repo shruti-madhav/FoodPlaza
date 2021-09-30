@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- CSS only -->
+        <link href="../static/CSS/home.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+    <style>
+        .loginimage{
+            width: 100%;
+            height: 850px;
+        }
+
+        th{
+            font-family: 'Lobster' cursive;
+        }
+
+        .register-inputs{
+            margin: 10px;
+            padding: 3px;
+            outline: none;
+            border: none;
+            font-size: 25px;
+            color: whitesmoke;
+            background-color: transparent;
+            border-bottom: 2px solid black ;
+        }
+
+        nav{
+            box-shadow: 5px 10px 8px black;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-image: url('../IMG/bg_2.jpg');
+        }
+
+        .buttons{
+            font-size: 28px;
+            color:whitesmoke;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 20px;
+            border:1px solid black;
+            background-color: transparent;
+            box-shadow: 5px 8px 6px black;
+        }
+    </style>-->
+</head>
+<body>
+<nav class="navbar navbar-expand-md fixed-top">
+            <div class="container-fluid">
+              <a class="navbar-brand" id="brand" href="/home/">FoodPlaza</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="links" aria-current="page" href="/home/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/menu/">Menu</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="#">Contact</a>
+                  </li>
+                    {% if request.session.userid or request.session.adminid %}
+                    <li class="nav-item">
+                    <a class="nav-link" id="links" href="/logout/">Logout</a>
+                  </li>
+                    {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/login/">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="links" href="/register/">Register</a>
+                  </li>
+                    {% endif %}
+                  <li class="nav-item dropdown">
+                      {% if request.session.userid or request.session.adminid %}
+                    <a class="nav-link dropdown-toggle" id="links" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Profile
+                    </a>
+                      {% endif %}
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        {% if request.session.userid %}
+                        <li><a class="dropdown-item dditems" href="/showcart/">My Cart</a></li>
+                        <li><a class="dropdown-item dditems" href="/myorder/">My Orders</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                        {% if request.session.adminid %}
+                        <li><a class="dropdown-item dditems" href="/addfood/">Add Food</a></li>
+                        <!--<li><a class="dropdown-item" href="addcustomer/">Add Customers</a></li>-->
+                        <li><a class="dropdown-item dditems" href="/graph/">Graphical Information</a></li>
+                        <li><a class="dropdown-item dditems" href="/changepassword/">Change Password</a></li>
+                        {% endif %}
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+    <div>
+        <img src="../static/IMG/changepass.webp" class="loginimage">
+    </div>
+
+
+    <div class="carousel-caption d-none d-md-block">
+        <div>
+            <form method="post" action="/updatepassword/" style="margin: 150px;">
+                {%csrf_token%}
+            <table>
+                {% if request.session.userid %}
+                <tr>
+                    <td><input class="register-inputs" type="text" value="{{request.session.userid}}" readonly><br></td>
+                </tr>
+                {% elif request.session.adminid %}
+                <tr>
+                    <td><input class="register-inputs" type="text" value="{{request.session.adminid}}" readonly><br></td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th>Old Password:</th>
+                    <td><input class="register-inputs" type="text" name="old" required><br></td>
+                </tr>
+                <tr>
+                    <th>New Password:</th>
+                    <td><input class="register-inputs" type="text" name="new" required><br></td>
+                </tr>
+                <tr>
+                    <th>Confirm New Password:</th>
+                    <td><input class="register-inputs" type="text"></td>
+                </tr>
+                <tr>
+                    <td><input class="buttons" type="submit" value="Submit"></td>
+                </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+
+<!--footer-->
+        <footer class="footer mt-auto py-3 bg-light">
+          <div class="container footer">
+            <div class="row">
+              <ul type="none" class="footerlinks">
+                <li class="flinks">Home</li>
+                <li class="flinks">Menu</li>
+                <li class="flinks">Contact</li>
+                <li class="flinks">About Us</li>
+                <li class="flinks">Login</li>
+              </ul>
+              <ul type="none" class="sociallinks">
+                <li class="slinks"><a href="https://www.instagram.com/"><img src="https://img.icons8.com/ios/50/000000/instagram-new.png"/></a></li>
+                <li class="slinks"><a href="https://www.google.com/"><img src="https://img.icons8.com/ios/50/000000/google-logo.png"/></a></li>
+                <li class="slinks"><a href="https://www.facebook.com/"><img src="https://img.icons8.com/ios/50/000000/facebook-new.png"/></a></li>
+                <li class="slinks"><a href="https://www.twitter.com/"><img src="https://img.icons8.com/ios/50/000000/twitter.png"/></a></li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+
+
+</body>
+</html>

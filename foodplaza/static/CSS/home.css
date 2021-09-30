@@ -1,0 +1,168 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+h1{
+    color: pink;
+}
+
+/*navbar css*/
+
+nav{
+    box-shadow: 5px 10px 8px black;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../IMG/bg_2.jpg');
+}
+
+#links, .dditems, #first, #second, .speciallinks, .footerlinks{
+    font-family: 'Comfortaa', cursive;
+}
+
+#brand{
+    outline: none;
+    color: whitesmoke;    
+    font-size: 35px;
+    padding-left: 30px;
+    font-family: 'Lobster', cursive;
+}
+
+#links{
+    outline: none;    
+    color: white;
+    font-size: 22px;
+    padding-left: 30px;
+}
+
+.dditems{
+    font-size: 22px;
+}
+/*navbar css end*/
+
+/*home intro*/
+
+.bgimage{
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.image{
+    width: 100%;
+    height: 550px;
+}
+
+.name{
+    color: white;
+    font-size: 90px;
+    font-family: 'Lobster', cursive;
+}
+
+#image{
+    opacity: 1;
+    padding: 40px;
+}
+
+#first{
+    color: black;
+    background-color: burlywood;
+}
+
+#secimage{
+    opacity: 1;
+    padding: 40px;
+    margin-left: -90px;
+}
+
+#second{
+    padding-left: 40px;
+    background-color: burlywood;
+}
+
+/* home intro end*/
+
+/*special menu*/
+
+.parallax{
+    min-height: 300px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: url('../IMG/dessert-3.jpg');
+}
+
+#special{
+    margin-left: 500px;
+    margin-top: 50px;
+    padding-left: 200px;
+    font-family: 'lobster', cursive;
+    position: relative;
+    transform: translate(-20%, 70%);
+    font-size: 60px;
+    color: lightgray;
+    text-shadow: 5px 10px 0 black;
+}
+
+.speciallinks{
+    font-size: 25px;
+    outline: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.specialimage{
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.specialmenu{
+    display: flex;
+}
+
+.card-img-top{
+    width: auto;
+    height: 325px;
+}
+.fade{
+    padding: 20px;
+    background-color: burlywood;
+}
+
+/*footer*/
+
+.footer{
+    min-height: 300px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: url('../IMG/insta-4.jpg');
+}
+
+.footerlinks{
+    display: flex;
+    margin-left: 140px;
+}
+
+.flinks{
+    font-family: 'Nunito', sans-serif;
+    font-size: 40px;
+    padding-right: 20px;
+    color: black;
+    font-weight: bolder;
+    padding-left: 30px;
+    margin-top: 130px;
+}
+
+.sociallinks{
+    display: flex;
+    margin-left: 390px;
+}
+
+.slinks{
+    font-weight: bold;
+    padding: 15px;
+}
+
+/*end footer*/

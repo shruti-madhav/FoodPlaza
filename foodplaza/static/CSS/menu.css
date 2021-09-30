@@ -1,0 +1,143 @@
+nav{
+    box-shadow: 5px 10px 8px black;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../IMG/bg_2.jpg');
+}
+
+#links, .dditems, #first, #second, .speciallinks, .footerlinks{
+    font-family: 'Comfortaa', cursive;
+}
+
+#brand{
+    outline: none;
+    color: whitesmoke;
+    font-size: 35px;
+    padding-left: 30px;
+    font-family: 'Lobster', cursive;
+}
+
+#links{
+    outline: none;
+    color: white;
+    font-size: 22px;
+    padding-left: 30px;
+}
+
+.dditems{
+    font-size: 22px;
+}
+
+/*
+#m{
+    margin-top: 10px;
+    font-size: 80px;
+    color: black;
+    /font-family: 'Sansita Swashed', cursive;
+    font-family: 'Chonburi', cursive;
+    /font-family: 'Courgette', cursive;
+    /font-family: 'Damion', cursive;
+    /font-family: 'Lemon', cursive;
+    /font-family: 'Niconne', cursive;
+    /font-family: 'Satisfy', cursive;
+}
+
+#mn{
+    background-color: #f2c499;
+    width: 500px;
+    margin-left: 450px;
+    opacity: 0.85;
+}
+*/
+footer{
+    background-color: #222;
+    background-image: url("/static/IMG/try4.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.homefoot{
+    color: yellowgreen;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+}
+
+.homefoot:hover{
+    color: forestgreen;
+}
+
+cartcontainer{
+    max-width: 650px;
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto;
+}
+
+.cartheader,.cartbody{
+    position: relative;
+    width:470px;
+    display: flex;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+    justify-content: flex-start;
+    border-bottom: 2px solid #f2c499;
+}
+.Product{
+    position: relative;
+    width:200px;
+    display: flex;
+    justify-content: flex-start; 
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.Price{
+    position: relative;
+    width:90px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+}
+
+.Quantity{
+    position: relative;
+    width:120px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+}
+
+.Total{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+}
+
+.Quantity i,.Product i{
+    padding: 10px;
+}
+
+.carttotal{
+    display: flex;
+    justify-content: flex-end;
+    width: 95%;
+    padding: 10px 0;
+}
+
+.remove{
+    padding: 0px 0;
+    border: none;
+    background-color: white;
+}
+
+.plus,.minus{
+    padding:0px 0;
+    border: none;
+    background-color: white;
+}
+
+#button{
+    border-radius:50% ;
+    background-color: white;
+}
